@@ -1,0 +1,17 @@
+[build-system]
+# Minimum requirements for the build system to execute.
+requires = ["setuptools", "wheel"]  # PEP 518 specifications.
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "db_utils"
+description = "Example python native ODBC and PEP 249 implementation"
+version = "0.0.1"
+readme = "README.md"
+authors = [{name = "Preston Blackburn"}]
+requires-python = ">=3.8.0"
+
+dependencies = []
+
+
+
