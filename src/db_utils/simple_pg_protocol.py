@@ -5,14 +5,6 @@ from dataclasses import dataclass, field
 from logging import getLogger
 _logger = getLogger(__name__)
 
-# these are created by default in Postgres
-parameters = {
-    'host': 'localhost',
-    'port': 5432,
-    'user': 'postgres',
-    'database': 'postgres',
-}
-
 @dataclass
 class ConnectionHandle:
     sock: socket.socket = field(default_factory= lambda: socket.socket(socket.AF_INET, socket.SOCK_STREAM))
@@ -324,6 +316,14 @@ def disconnect(handle: ConnectionHandle) -> None:
 
 
 if __name__ == "__main__":
+    # these are created by default in Postgres
+    parameters = {
+        'host': 'localhost',
+        'port': 5432,
+        'user': 'postgres',
+        'database': 'postgres',
+    }
+
     handle = ConnectionHandle()
     handle = startup(parameters, handle)
     execute(handle, """select 

@@ -9,12 +9,17 @@ __all__ = [
     "SQLDisconnect",
 
     # PEP 249 Implmentation
-    "connect"
+    "connect",
+
+    # pg protocol
+    "startup",
+    "execute",
+    "process_chunk",
+    "disconnect"
 ]
 
 
 from db_utils.odbc_driver import (
-    ConnectionHandle, 
     SQLConnect, 
     SQLExecDirect, 
     SQLFetch, 
@@ -26,3 +31,10 @@ from db_utils.pep_249_odbc_manager import (
     connect
 )
 
+from db_utils.simple_pg_protocol import (
+    ConnectionHandle, 
+    startup,
+    execute,
+    process_chunk,
+    disconnect
+)

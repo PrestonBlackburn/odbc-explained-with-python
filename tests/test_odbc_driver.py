@@ -1,3 +1,4 @@
+import pytest
 from db_utils import (
     ConnectionHandle, 
     SQLConnect, 
@@ -11,34 +12,43 @@ logging.basicConfig()
 logging.getLogger().setLevel(logging.DEBUG)
 
 
-handle = ConnectionHandle()
-query = """select 
-    table_name,
-    table_schema as schema_name, 
-    table_catalog as database_name 
-from information_schema.tables limit 5;"""
 
-SQLConnect(
-    handle,
-    'localhost',
-    9,
-    'postgres',
-    8,
-    'none',
-    4
-)
+@pytest.fixture(scope='module', autouse=True)
+def establish_connection(start_postgres, wait_for_postgres):
+    handle = ConnectionHandle()
+    SQLConnect(
+        handle,
+        'localhost',
+        9,
+        'postgres',
+        8,
+        'none',
+        4
+    )        
 
-SQLExecDirect(
-    handle,
-    query,
-    len(query)
-)
+    yield handle
+    SQLDisconnect(handle)
 
-# this doesn't comletely align with ODBC as I use a generator instead of just passing the same handle
-cursor = SQLFetch(handle)
-columns, rows = SQLGetData(cursor)
+@pytest.fixture(autouse=True)
+def test_query_execution(establish_connection):
+    query = """select 
+        table_name,
+        table_schema as schema_name, 
+        table_catalog as database_name 
+    from information_schema.tables limit 5;"""
 
-SQLDisconnect(handle)
+    SQLExecDirect(
+        establish_connection,
+        query,
+        len(query)
+    )
 
-print("Got Columns: ", columns) 
-print("Got Rows: ", rows)
+    return establish_connection
+
+def test_get_results(establish_connection, test_query_execution):
+    cursor = SQLFetch(test_query_execution)
+    columns, rows = SQLGetData(cursor)
+
+    assert len(rows) == 5
+    assert len(columns) == 3
+
