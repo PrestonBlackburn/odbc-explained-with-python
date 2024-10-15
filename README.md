@@ -61,13 +61,11 @@ An ODBC driver is not required for PEP 249. With our existing code we can implme
 
 Once we have our implementation of the postgres protocol, we need to map our implmenetation to the standard ODBC functions. We'll implement the following key odbc functions below:
 ```python
-SQLConnect, 
-SQLExecDirect, 
-SQLFetch, 
-SQLGetData, 
+SQLConnect
+SQLExecDirect
+SQLFetch
+SQLGetData
 SQLDisconnect
 ```
-
-
 
 
